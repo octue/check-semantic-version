@@ -1,3 +1,7 @@
+[![codecov](https://codecov.io/gh/octue/check-semantic-version/branch/main/graph/badge.svg?token=AL0I3UVUV2)](https://codecov.io/gh/octue/check-semantic-version)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+
 # Semantic version checker
 A GitHub action and command-line tool that automatically checks if a package's semantic version is correct. It compares
 the semantic version specified in the given type of "version source" file against the expected semantic version
