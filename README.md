@@ -1,3 +1,4 @@
+[![Release](https://github.com/octue/check-semantic-version/actions/workflows/release.yml/badge.svg)](https://github.com/octue/check-semantic-version/actions/workflows/release.yml)
 [![codecov](https://codecov.io/gh/octue/check-semantic-version/branch/main/graph/badge.svg?token=AL0I3UVUV2)](https://codecov.io/gh/octue/check-semantic-version)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
