@@ -4,7 +4,7 @@
 [![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 # Semantic version checker
-A GitHub action and command-line tool that automatically checks if a package's semantic version is correct. It compares
+A GitHub action that automatically checks if a package's semantic version is correct. It compares
 the semantic version specified in the given type of "version source" file against the expected semantic version
 calculated from the commits since the last tagged version in the git history. This is determined according to the
 mandatory `git-mkver` configuration file in the working directory. If the version source file and the expected version
@@ -16,8 +16,8 @@ The checker works with:
 - `pyproject.toml`
 - `package.json`
 
-## GitHub action
-The checker can be easily used as a step in a GitHub workflow:
+## Usage
+Add a `mkver.conf` file to your repository and add the action as a step in your workflow:
 
 ```yaml
 steps:
@@ -25,26 +25,12 @@ steps:
   with:
     # Set fetch-depth to 0 to fetch all tags (necessary for git-mkver to determine the correct semantic version).
     fetch-depth: 0
-- uses: octue/check-semantic-version@1.0.0.beta-0
+- uses: octue/check-semantic-version@1.0.0.beta-2
   with:
     version_source_type: setup.py
 ```
 
 See [here](examples/workflow.yml) for an example in a workflow.
-
-## CLI
-```shell
-usage: check-semantic-version [-h] [--file FILE] {setup.py,pyproject.toml,package.json}
-
-positional arguments:
-  {setup.py,pyproject.toml,package.json}
-                        The type of file to look for the version in. It must be one of ['setup.py', 'pyproject.toml', 'package.json'] and is assumed to be in the
-                        repository root unless the --file option is also given
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --file FILE           The path to the version source file if it isn't in the repository root e.g. path/to/setup.py
-```
 
 ## More information
 
@@ -66,9 +52,7 @@ A version source file is one of the following, which must contain the package ve
 If the version source file is not in the root directory, an optional argument can be passed to the checker to tell it to
 look at a file of the version source file type at a different location.
 
-### Extra requirements
-Note that this command requires:
-* `git-mkver` to be installed and available in the shell as `git-mkver` (this is already done if using the GitHub action)
-* A `mkver.conf` file to be present in the working directory (usually the repository root):
-  - [See an example for non-beta packages](examples/mkver.conf) (full semantic versioning)
-  - [See an example for packages in beta](examples/mkver-for-beta-versions.conf) (keeps the version below `1.0.0`)
+### `mkver.conf` files
+Note that this command requires a `mkver.conf` file to be present in the working directory (usually the repository root):
+- [See an example for non-beta packages](examples/mkver.conf) (full semantic versioning)
+- [See an example for packages in beta](examples/mkver-for-beta-versions.conf) (keeps the version below `1.0.0`)
