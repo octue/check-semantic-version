@@ -1,17 +1,15 @@
 name: 'Check semantic version'
-description: 'Check that the version of your package is the same as the expected semantic version calculated from the conventional commits on your current branch.'
+description: 'Check the version of your package is the same as the semantic version calculated from the conventional commits on the branch.'
 author: 'Marcus Lugg'
+branding:
+  icon: git-commit
+  color: green
 inputs:
-  version_source_type:
-    description: 'The name of the type of file containing the current version number (one of "setup.py", "pyproject.toml", or "package.json")'
+  path:
+    description: 'The path of the file containing the current version number (must be one of "setup.py", "pyproject.toml", or "package.json").'
     required: true
-  version_source_path:
-    description: 'The path to the version source file if it is not in the repository root.'
-    required: false
-    default: ''
 runs:
    using: 'docker'
    image: 'docker://octue/check-semantic-version:1.0.0.beta-2'
    args:
-     - ${{ inputs.version_source_type }}
-     - ${{ inputs.version_source_path }}
+     - ${{ inputs.path }}

@@ -17,14 +17,15 @@ VERSION_PARAMETERS = {
 }
 
 
-def get_current_version(version_source, version_source_file=None):
+def get_current_version(path):
     """Get the current version of the package via the given version source. The relevant file containing the version
     information is assumed to be in the current working directory unless `version_source_file` is given.
 
-    :param str version_source: the name of the method to use to acquire the current version number (one of "setup.py", "pyproject.toml", or "package.json")
-    :param str|None version_source_file: the path to the version source file if it is not in the current working directory
-    :return str:
+    :param str path: the path to the version source file (it has to be of type "setup.py", "pyproject.toml", or "package.json")
+    :return str: the version specified in the version source file
     """
+    version_source = os.path.split(path)[-1]
+
     try:
         version_parameters = copy.deepcopy(VERSION_PARAMETERS[version_source])
     except KeyError:
@@ -35,14 +36,10 @@ def get_current_version(version_source, version_source_file=None):
     original_working_directory = os.getcwd()
 
     if version_source in {"setup.py", "pyproject.toml"}:
-        if version_source_file:
-            os.chdir(os.path.dirname(version_source_file))
+        os.chdir(os.path.dirname(os.path.abspath(path)))
 
     elif version_source == "package.json":
-        if version_source_file:
-            version_parameters[0] = version_parameters[0].format(version_source_file)
-        else:
-            version_parameters[0] = version_parameters[0].format("package.json")
+        version_parameters[0] = version_parameters[0].format(path)
 
     process = subprocess.run(version_parameters[0], shell=version_parameters[1], capture_output=True)
 
@@ -76,22 +73,14 @@ def main(argv=None):
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "version_source_type",
+        "path",
         choices=list(VERSION_PARAMETERS.keys()),
-        help=f"The type of file to look for the version in. It must be one of {list(VERSION_PARAMETERS.keys())} and is "
-        f"assumed to be in the repository root unless the --file option is also given",
-    )
-
-    parser.add_argument(
-        "--file",
-        default=None,
-        type=str,
-        help="The path to the version source file if it isn't in the repository root e.g. path/to/setup.py",
+        help=f"The path to the version source file. It must be one of these types: {list(VERSION_PARAMETERS.keys())}",
     )
 
     args = parser.parse_args(argv)
 
-    current_version = get_current_version(version_source=args.version_source_type, version_source_file=args.file)
+    current_version = get_current_version(path=args.path)
     expected_semantic_version = get_expected_semantic_version()
 
     if not current_version or current_version == "null":
