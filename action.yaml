@@ -1,5 +1,5 @@
 name: 'Check semantic version'
-description: 'Check the version of your package is the same as the semantic version calculated from the conventional commits on the branch.'
+description: 'Check the version of your package is the same as the semantic version calculated from the Conventional Commits on the branch.'
 author: 'Marcus Lugg'
 branding:
   icon: git-commit
