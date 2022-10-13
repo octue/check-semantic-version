@@ -24,7 +24,7 @@ class TestCheckSemanticVersion(unittest.TestCase):
     def test_error_raised_if_unsupported_version_source_provided(self):
         """Ensure an error is raised if an unsupported version source is provided."""
         with self.assertRaises(ValueError):
-            check_semantic_version.get_current_version(version_source="blah")
+            check_semantic_version.get_current_version(path="blah")
 
     def test_get_current_version_for_setup_py(self):
         try:
@@ -36,10 +36,7 @@ class TestCheckSemanticVersion(unittest.TestCase):
 
     def test_get_current_version_with_custom_file_path_for_setup_py(self):
         """Test that the current version can be extracted from a different file than the top-level setup.py file."""
-        version = check_semantic_version.get_current_version(
-            "setup.py", version_source_file=os.path.join(TEST_DATA_DIRECTORY, "setup.py")
-        )
-
+        version = check_semantic_version.get_current_version(path=os.path.join(TEST_DATA_DIRECTORY, "setup.py"))
         self.assertEqual(version, "0.3.4")
 
     def test_get_current_version_for_pyproject_toml(self):
@@ -52,10 +49,7 @@ class TestCheckSemanticVersion(unittest.TestCase):
 
     def test_get_current_version_with_custom_file_path_for_pyproject_toml(self):
         """Test that the current version can be extracted from a different file than the top-level file pyproject.toml."""
-        version = check_semantic_version.get_current_version(
-            "pyproject.toml", version_source_file=os.path.join(TEST_DATA_DIRECTORY, "pyproject.toml")
-        )
-
+        version = check_semantic_version.get_current_version(path=os.path.join(TEST_DATA_DIRECTORY, "pyproject.toml"))
         self.assertEqual(version, "0.6.3")
 
     def test_get_current_version_for_package_json(self):
@@ -68,10 +62,7 @@ class TestCheckSemanticVersion(unittest.TestCase):
 
     def test_get_current_version_with_custom_file_path_for_package_json(self):
         """Test that the current version can be extracted from a different file than the top-level package.json file."""
-        version = check_semantic_version.get_current_version(
-            "package.json", version_source_file=os.path.join(TEST_DATA_DIRECTORY, "package.json")
-        )
-
+        version = check_semantic_version.get_current_version(path=os.path.join(TEST_DATA_DIRECTORY, "package.json"))
         self.assertEqual(version, "1.5.3")
 
     def test_get_expected_semantic_version(self):

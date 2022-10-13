@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0
       - uses: octue/check-semantic-version@main
         with:
-          version_source_type: pyproject.toml
+          path: pyproject.toml
 
   tests:
     if: "!contains(github.event.head_commit.message, 'skipci')"
