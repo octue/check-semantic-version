@@ -27,7 +27,7 @@ steps:
     fetch-depth: 0
 - uses: octue/check-semantic-version@1.0.0.beta-2
   with:
-    version_source_type: setup.py
+    path: setup.py
 ```
 
 See [here](examples/workflow.yml) for an example in a workflow.
