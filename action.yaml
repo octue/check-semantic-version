@@ -9,7 +9,7 @@ inputs:
     description: 'The path of the file containing the current version number (must be one of "setup.py", "pyproject.toml", or "package.json").'
     required: true
   breaking_change_indicated_by:
-    description: 'The semantic version number type that a breaking change increments (must be one of "major", "minor", or "patch").'
+    description: 'The number in the semantic version that a breaking change should increment (must be one of "major", "minor", or "patch"). This is ignored if a `mkver.conf` file is present in the repository root.'
     required: false
     default: 'major'
 runs:
