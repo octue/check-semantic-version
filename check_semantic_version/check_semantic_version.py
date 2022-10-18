@@ -73,6 +73,7 @@ def get_expected_semantic_version(version_source_type, breaking_change_indicated
             config_path = temporary_configuration.name
             configuration.write(path=config_path)
         else:
+            logger.warning("`mkver.conf` file found. Ignoring `breaking_change_indicated_by` input.")
             config_path = "mkver.conf"
 
         process = subprocess.run(["git-mkver", "-c", config_path, "next"], capture_output=True)
