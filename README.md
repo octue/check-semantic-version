@@ -24,6 +24,7 @@ steps:
 - uses: octue/check-semantic-version@1.0.0.beta-3
   with:
     path: setup.py
+    breaking_change_indicated_by: major
 ```
 
 See [here](examples/workflow.yml) for an example in a workflow.
@@ -49,8 +50,8 @@ look at a file of the version source file type at a different location.
 ### `mkver.conf` files
 This action automatically generates a standard `mkver.conf` file to configure `git-mkver`. For more control, you can add
 your own `mkver.conf` file to the repository root. Here are some example `mkver.conf` files:
-- [See an example for non-beta packages](examples/mkver.conf) (full semantic versioning)
-- [See an example for packages in beta](examples/mkver-for-beta-versions.conf) (keeps the version below `1.0.0`)
+- [Non-beta packages](examples/mkver.conf) (full semantic versioning)
+- [Beta packages](examples/mkver-for-beta-versions.conf) (keeps the version below `1.0.0`)
 
 ### Example
 For [this standard configuration file](examples/mkver.conf), if the last tagged version in your
