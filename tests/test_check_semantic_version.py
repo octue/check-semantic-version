@@ -92,8 +92,8 @@ class TestCheckSemanticVersion(unittest.TestCase):
             os.chdir(TEST_DATA_DIRECTORY)
 
             with self.assertLogs(level=logging.WARNING) as logging_context:
-                with self.assertRaises(SystemExit):
-                    check_semantic_version.main(["setup.py"])
+                with patch("subprocess.run", return_value=MockCompletedProcess(stdout=b"0.3.9")):
+                    check_semantic_version.get_expected_semantic_version("setup.py")
 
         finally:
             os.chdir(original_working_directory)
