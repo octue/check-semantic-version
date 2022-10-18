@@ -57,7 +57,7 @@ def get_expected_semantic_version(version_source_type, breaking_change_indicated
     """Get the expected semantic version for the package as of the current HEAD git commit.
 
     :param str version_source_type: the type of file containing the current version number (must be one of "setup.py", "pyproject.toml", or "package.json")
-    :param str breaking_change_indicated_by: the semantic version number type that a breaking change increments (must be one of "major", "minor", or "patch")
+    :param str breaking_change_indicated_by: the number in the semantic version that a breaking change should increment (must be one of "major", "minor", or "patch")
     :return str:
     """
     with tempfile.NamedTemporaryFile() as temporary_configuration:
@@ -100,7 +100,7 @@ def main(argv=None):
         choices=["major", "minor", "patch"],
         default="major",
         nargs="?",
-        help='The semantic version number type that a breaking change increments (must be one of "major", "minor", or "patch"). This is ignored if a `mkver.conf` file is present in the repository root.',
+        help='the number in the semantic version that a breaking change should increment (must be one of "major", "minor", or "patch"). This is ignored if a `mkver.conf` file is present in the repository root.',
     )
 
     args = parser.parse_args(argv)
