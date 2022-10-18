@@ -72,7 +72,7 @@ class Configuration:
     """A representation of a `mkver.conf` (`git-mkver` configuration) file.
 
     :param str version_source_type: the type of file containing the current version number (must be one of "setup.py", "pyproject.toml", or "package.json")
-    :param str breaking_change_indicated_by: the version number type that a breaking change increments (must be one of "major", "minor", or "patch")
+    :param str breaking_change_indicated_by: the semantic version number type that a breaking change increments (must be one of "major", "minor", or "patch")
     :param str tag_prefix: the prefix to be used before version numbers (e.g. "v")
     :return None:
     """

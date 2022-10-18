@@ -53,16 +53,22 @@ def get_current_version(path, version_source_type):
     return process.stdout.strip().decode("utf8")
 
 
-def get_expected_semantic_version(version_source_type):
+def get_expected_semantic_version(version_source_type, breaking_change_indicated_by):
     """Get the expected semantic version for the package as of the current HEAD git commit.
 
     :param str version_source_type: the type of file containing the current version number (must be one of "setup.py", "pyproject.toml", or "package.json")
+    :param str breaking_change_indicated_by: the semantic version number type that a breaking change increments (must be one of "major", "minor", or "patch")
     :return str:
     """
     with tempfile.NamedTemporaryFile() as temporary_configuration:
         if not os.path.exists("mkver.conf"):
             logger.warning("No `mkver.conf` file found. Generating one instead.")
-            configuration = Configuration(version_source_type=version_source_type)
+
+            configuration = Configuration(
+                version_source_type=version_source_type,
+                breaking_change_indicated_by=breaking_change_indicated_by,
+            )
+
             configuration.generate()
             config_path = temporary_configuration.name
             configuration.write(path=config_path)
@@ -88,11 +94,21 @@ def main(argv=None):
         help=f"The path to the version source file. It must be one of these types: {list(VERSION_PARAMETERS.keys())}",
     )
 
+    parser.add_argument(
+        "breaking_change_indicated_by",
+        choices=["major", "minor", "patch"],
+        help='The semantic version number type that a breaking change increments (must be one of "major", "minor", or "patch"). This is ignored if a `mkver.conf` file is present in the repository root.',
+    )
+
     args = parser.parse_args(argv)
 
     version_source_type = os.path.split(args.path)[-1]
     current_version = get_current_version(path=args.path, version_source_type=version_source_type)
-    expected_semantic_version = get_expected_semantic_version(version_source_type=version_source_type)
+
+    expected_semantic_version = get_expected_semantic_version(
+        version_source_type=version_source_type,
+        breaking_change_indicated_by=args.breaking_change_indicated_by,
+    )
 
     if not current_version or current_version == "null":
         print(f"{RED}VERSION FAILED CHECKS:{NO_COLOUR} No current version found.")

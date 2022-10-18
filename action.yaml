@@ -8,8 +8,13 @@ inputs:
   path:
     description: 'The path of the file containing the current version number (must be one of "setup.py", "pyproject.toml", or "package.json").'
     required: true
+  breaking_change_indicated_by:
+    description: 'The semantic version number type that a breaking change increments (must be one of "major", "minor", or "patch").'
+    required: false
+    default: 'major'
 runs:
    using: 'docker'
    image: 'docker://octue/check-semantic-version:1.0.0.beta-3'
    args:
      - ${{ inputs.path }}
+     - ${{ inputs.breaking_change_indicated_by }}
