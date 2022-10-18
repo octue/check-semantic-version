@@ -81,7 +81,10 @@ class TestCheckSemanticVersion(unittest.TestCase):
     def test_get_expected_semantic_version(self):
         """Test that the expected semantic version can be parsed from a successful `git-mkver` command."""
         with patch("subprocess.run", return_value=MockCompletedProcess(stdout=b"0.3.9")):
-            version = check_semantic_version.get_expected_semantic_version(version_source_type="setup.py")
+            version = check_semantic_version.get_expected_semantic_version(
+                version_source_type="setup.py",
+                breaking_change_indicated_by="minor",
+            )
             self.assertEqual(version, "0.3.9")
 
     def test_mkver_conf_file_generated_if_not_present_in_current_working_directory(self):
@@ -93,7 +96,10 @@ class TestCheckSemanticVersion(unittest.TestCase):
 
             with self.assertLogs(level=logging.WARNING) as logging_context:
                 with patch("subprocess.run", return_value=MockCompletedProcess(stdout=b"0.3.9")):
-                    check_semantic_version.get_expected_semantic_version("setup.py")
+                    check_semantic_version.get_expected_semantic_version(
+                        "setup.py",
+                        breaking_change_indicated_by="minor",
+                    )
 
         finally:
             os.chdir(original_working_directory)
