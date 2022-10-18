@@ -98,6 +98,7 @@ def main(argv=None):
     parser.add_argument(
         "breaking_change_indicated_by",
         choices=["major", "minor", "patch"],
+        default="major",
         nargs="?",
         help='The semantic version number type that a breaking change increments (must be one of "major", "minor", or "patch"). This is ignored if a `mkver.conf` file is present in the repository root.',
     )
