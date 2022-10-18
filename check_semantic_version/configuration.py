@@ -90,7 +90,7 @@ class Configuration:
         self._configuration = {
             "tagPrefix": self.tag_prefix,
             "defaults": self._get_defaults(),
-            "patches": PATCHES[self.version_source_type],
+            "patches": [PATCHES[self.version_source_type]],
             "commitMessageActions": self._get_commit_message_actions(),
         }
 
