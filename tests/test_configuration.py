@@ -16,11 +16,13 @@ class TestConfiguration(TestCase):
         self.assertEqual(configuration._configuration["defaults"]["patches"], ["setup.py"])
         self.assertEqual(
             configuration._configuration["patches"],
-            {
-                "name": "setup.py",
-                "filePatterns": ["setup.py"],
-                "replacements": [{"find": 'version="{VersionRegex}"', "replace": 'version="{Version}"'}],
-            },
+            [
+                {
+                    "name": "setup.py",
+                    "filePatterns": ["setup.py"],
+                    "replacements": [{"find": 'version="{VersionRegex}"', "replace": 'version="{Version}"'}],
+                },
+            ],
         )
 
     def test_generate_with_pyproject_toml_version_source(self):
@@ -31,16 +33,18 @@ class TestConfiguration(TestCase):
         self.assertEqual(configuration._configuration["defaults"]["patches"], ["pyproject.toml"])
         self.assertEqual(
             configuration._configuration["patches"],
-            {
-                "name": "pyproject.toml",
-                "filePatterns": ["pyproject.toml"],
-                "replacements": [
-                    {
-                        "find": 'version = "{VersionRegex}"',
-                        "replace": 'version = "{Version}"',
-                    }
-                ],
-            },
+            [
+                {
+                    "name": "pyproject.toml",
+                    "filePatterns": ["pyproject.toml"],
+                    "replacements": [
+                        {
+                            "find": 'version = "{VersionRegex}"',
+                            "replace": 'version = "{Version}"',
+                        }
+                    ],
+                },
+            ],
         )
 
     def test_generate_with_package_json_version_source(self):
@@ -51,16 +55,18 @@ class TestConfiguration(TestCase):
         self.assertEqual(configuration._configuration["defaults"]["patches"], ["package.json"])
         self.assertEqual(
             configuration._configuration["patches"],
-            {
-                "name": "package.json",
-                "filePatterns": ["package.json"],
-                "replacements": [
-                    {
-                        "find": '"version": "{VersionRegex}"',
-                        "replace": '"version": "{Version}"',
-                    }
-                ],
-            },
+            [
+                {
+                    "name": "package.json",
+                    "filePatterns": ["package.json"],
+                    "replacements": [
+                        {
+                            "find": '"version": "{VersionRegex}"',
+                            "replace": '"version": "{Version}"',
+                        }
+                    ],
+                },
+            ],
         )
 
     def test_generate_with_breaking_change_indicated_by_major(self):
@@ -109,11 +115,13 @@ class TestConfiguration(TestCase):
                     "whenNoValidCommitMessages": "IncrementPatch",
                     "patches": ["pyproject.toml"],
                 },
-                "patches": {
-                    "name": "pyproject.toml",
-                    "filePatterns": ["pyproject.toml"],
-                    "replacements": [{"find": 'version = "{VersionRegex}"', "replace": 'version = "{Version}"'}],
-                },
+                "patches": [
+                    {
+                        "name": "pyproject.toml",
+                        "filePatterns": ["pyproject.toml"],
+                        "replacements": [{"find": 'version = "{VersionRegex}"', "replace": 'version = "{Version}"'}],
+                    },
+                ],
                 "commitMessageActions": [
                     {"pattern": "BREAKING CHANGE", "action": "IncrementMajor"},
                     {"pattern": "BREAKING-CHANGE", "action": "IncrementMajor"},
