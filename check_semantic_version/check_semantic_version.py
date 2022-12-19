@@ -1,5 +1,6 @@
 import logging
 import os
+import signal
 import subprocess
 import sys
 import tempfile
@@ -20,6 +21,27 @@ GREEN = "\033[0;32m"
 NO_COLOUR = "\033[0m"
 
 SUPPORTED_VERSION_SOURCE_FILES = {"setup.py", "pyproject.toml", "package.json"}
+
+
+class CalledProcessError(subprocess.CalledProcessError):
+    """A `CalledProcessError` that reports the `stderr` output of the process that errored."""
+
+    def __str__(self):
+        if self.returncode and self.returncode < 0:
+            try:
+                return "Command '%s' died with %r. Stderr: %r" % (
+                    self.cmd,
+                    signal.Signals(-self.returncode),
+                    self.stderr,
+                )
+            except ValueError:
+                return "Command '%s' died with unknown signal %d. Stderr: %r" % (
+                    self.cmd,
+                    -self.returncode,
+                    self.stderr,
+                )
+
+        return "Command '%s' returned non-zero exit status %d. Stderr: %r" % (self.cmd, self.returncode, self.stderr)
 
 
 def check_versions_match(path, breaking_change_indicated_by="major"):
@@ -81,7 +103,11 @@ def _get_current_version(path, version_source_type):
         command = f"""cat {absolute_path} | jq --raw-output '.["version"]'"""
         shell = True
 
-    process = subprocess.run(command, shell=shell, capture_output=True)
+    try:
+        process = subprocess.run(command, shell=shell, capture_output=True, check=True)
+    except subprocess.CalledProcessError as e:
+        raise CalledProcessError(returncode=e.returncode, cmd=e.cmd, output=e.output, stderr=e.stderr) from None
+
     return process.stdout.strip().decode("utf8")
 
 
