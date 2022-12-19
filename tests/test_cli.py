@@ -23,8 +23,8 @@ class TestCLI(unittest.TestCase):
                     with self.assertRaises(SystemExit) as e:
                         cli.main(["setup.py"])
 
-                        # Check that the exit code is 0.
-                        self.assertFalse(hasattr(e, "exception"))
+                    # Check that the exit code is 0.
+                    self.assertEqual(e.exception.code, 0)
 
                     message = mock_stdout.method_calls[0].args[0]
                     self.assertIn("VERSION PASSED CHECKS:", message)
@@ -43,8 +43,8 @@ class TestCLI(unittest.TestCase):
                     with self.assertRaises(SystemExit) as e:
                         cli.main(["setup.py"])
 
-                        # Check that the exit code is 1.
-                        self.assertEqual(e.exception.code, 1)
+                    # Check that the exit code is 1.
+                    self.assertEqual(e.exception.code, 1)
 
                     message = mock_stdout.method_calls[0].args[0]
                     self.assertIn("VERSION FAILED CHECKS:", message)
@@ -66,8 +66,8 @@ class TestCLI(unittest.TestCase):
                     with self.assertRaises(SystemExit) as e:
                         cli.main(["setup.py"])
 
-                        # Check that the exit code is 1.
-                        self.assertEqual(e.exception.code, 1)
+                    # Check that the exit code is 1.
+                    self.assertEqual(e.exception.code, 1)
 
                     message = mock_stdout.method_calls[0].args[0]
                     self.assertIn("VERSION FAILED CHECKS:", message)
