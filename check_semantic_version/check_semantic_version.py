@@ -15,6 +15,38 @@ NO_COLOUR = "\033[0m"
 SUPPORTED_VERSION_SOURCE_FILES = {"setup.py", "pyproject.toml", "package.json"}
 
 
+def check_versions_match(path, breaking_change_indicated_by="major"):
+    """Check that the current version in the version source file at the given path matches the expected semantic version.
+
+    :param str path: the path to the version source file (it must be of type "setup.py", "pyproject.toml", or "package.json")
+    :param str breaking_change_indicated_by: the number in the semantic version that a breaking change should increment (must be one of "major", "minor", or "patch")
+    :return bool: whether the versions match
+    """
+    version_source_type = os.path.split(path)[-1]
+    current_version = get_current_version(path=path, version_source_type=version_source_type)
+
+    expected_semantic_version = get_expected_semantic_version(
+        version_source_type=version_source_type,
+        breaking_change_indicated_by=breaking_change_indicated_by,
+    )
+
+    if not current_version or current_version == "null":
+        print(f"{RED}VERSION FAILED CHECKS:{NO_COLOUR} No current version found.")
+        return False
+
+    if current_version != expected_semantic_version:
+        print(
+            f"{RED}VERSION FAILED CHECKS:{NO_COLOUR} The current version ({current_version}) is different from the "
+            f"expected semantic version ({expected_semantic_version})."
+        )
+        return False
+
+    print(
+        f"{GREEN}VERSION PASSED CHECKS:{NO_COLOUR} The current version is the same as the expected semantic version: "
+        f"{expected_semantic_version}."
+    )
+
+
 def get_current_version(path, version_source_type):
     """Get the current version of the package via the given version source. The relevant file containing the version
     information is assumed to be in the current working directory unless `version_source_file` is given.

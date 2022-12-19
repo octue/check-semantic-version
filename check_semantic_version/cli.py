@@ -1,15 +1,7 @@
 import argparse
-import os
 import sys
 
-from check_semantic_version.check_semantic_version import (
-    GREEN,
-    NO_COLOUR,
-    RED,
-    SUPPORTED_VERSION_SOURCE_FILES,
-    get_current_version,
-    get_expected_semantic_version,
-)
+from check_semantic_version.check_semantic_version import SUPPORTED_VERSION_SOURCE_FILES, check_versions_match
 
 
 def main(argv=None):
@@ -23,7 +15,7 @@ def main(argv=None):
     parser.add_argument(
         "path",
         choices=SUPPORTED_VERSION_SOURCE_FILES,
-        help=f"The path to the version source file. It must be one of these types: {SUPPORTED_VERSION_SOURCE_FILES}",
+        help=f"The path to the version source file. The file must be one of these types: {SUPPORTED_VERSION_SOURCE_FILES}",
     )
 
     parser.add_argument(
@@ -31,34 +23,17 @@ def main(argv=None):
         choices=["major", "minor", "patch"],
         default="major",
         nargs="?",
-        help='the number in the semantic version that a breaking change should increment (must be one of "major", "minor", or "patch"). This is ignored if a `mkver.conf` file is present in the repository root.',
+        help='The number in the semantic version that a breaking change should increment (must be one of "major", '
+        '"minor", or "patch"). This is ignored if a `mkver.conf` file is present in the repository root.',
     )
 
     args = parser.parse_args(argv)
 
-    version_source_type = os.path.split(args.path)[-1]
-    current_version = get_current_version(path=args.path, version_source_type=version_source_type)
+    match = check_versions_match(args.path, args.breaking_change_indicated_by)
 
-    expected_semantic_version = get_expected_semantic_version(
-        version_source_type=version_source_type,
-        breaking_change_indicated_by=args.breaking_change_indicated_by,
-    )
-
-    if not current_version or current_version == "null":
-        print(f"{RED}VERSION FAILED CHECKS:{NO_COLOUR} No current version found.")
+    if not match:
         sys.exit(1)
 
-    if current_version != expected_semantic_version:
-        print(
-            f"{RED}VERSION FAILED CHECKS:{NO_COLOUR} The current version ({current_version}) is different from the "
-            f"expected semantic version ({expected_semantic_version})."
-        )
-        sys.exit(1)
-
-    print(
-        f"{GREEN}VERSION PASSED CHECKS:{NO_COLOUR} The current version is the same as the expected semantic version: "
-        f"{expected_semantic_version}."
-    )
     sys.exit(0)
 
 
