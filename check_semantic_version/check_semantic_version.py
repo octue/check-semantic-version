@@ -38,11 +38,9 @@ def get_current_version(path, version_source_type):
         )
 
     original_working_directory = os.getcwd()
+    os.chdir(os.path.dirname(os.path.abspath(path)))
 
-    if version_source_type in {"setup.py", "pyproject.toml"}:
-        os.chdir(os.path.dirname(os.path.abspath(path)))
-
-    elif version_source_type == "package.json":
+    if version_source_type == "package.json":
         version_parameters[0] = version_parameters[0].format(path)
 
     process = subprocess.run(version_parameters[0], shell=version_parameters[1], capture_output=True)
