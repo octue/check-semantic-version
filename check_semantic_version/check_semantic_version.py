@@ -62,6 +62,7 @@ def _get_current_version(path, version_source_type):
         )
 
     absolute_path = os.path.abspath(path)
+    logger.info("Getting current version from %r.", absolute_path)
 
     if version_source_type == "setup.py":
         command = ["python", absolute_path, "--version"]
@@ -97,8 +98,9 @@ def _get_expected_semantic_version(version_source_type, breaking_change_indicate
             config_path = temporary_configuration.name
             configuration.write(path=config_path)
         else:
-            logger.warning("`mkver.conf` file found. Ignoring `breaking_change_indicated_by` input.")
-            config_path = "mkver.conf"
+            config_path = os.path.abspath("mkver.conf")
+
+            logger.warning("`mkver.conf` file found at %r. Ignoring `breaking_change_indicated_by` input.", config_path)
 
         process = subprocess.run(["git-mkver", "-c", config_path, "next"], capture_output=True)
 
