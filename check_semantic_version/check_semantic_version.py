@@ -74,6 +74,7 @@ def check_versions_match(path, breaking_change_indicated_by="major"):
         f"{GREEN}VERSION PASSED CHECKS:{NO_COLOUR} The current version is the same as the expected semantic version: "
         f"{expected_semantic_version}."
     )
+    return True
 
 
 def _get_current_version(path, version_source_type):
