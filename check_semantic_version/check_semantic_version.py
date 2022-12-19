@@ -23,9 +23,9 @@ def check_versions_match(path, breaking_change_indicated_by="major"):
     :return bool: whether the versions match
     """
     version_source_type = os.path.split(path)[-1]
-    current_version = get_current_version(path=path, version_source_type=version_source_type)
+    current_version = _get_current_version(path=path, version_source_type=version_source_type)
 
-    expected_semantic_version = get_expected_semantic_version(
+    expected_semantic_version = _get_expected_semantic_version(
         version_source_type=version_source_type,
         breaking_change_indicated_by=breaking_change_indicated_by,
     )
@@ -47,7 +47,7 @@ def check_versions_match(path, breaking_change_indicated_by="major"):
     )
 
 
-def get_current_version(path, version_source_type):
+def _get_current_version(path, version_source_type):
     """Get the current version of the package via the given version source. The relevant file containing the version
     information is assumed to be in the current working directory unless `version_source_file` is given.
 
@@ -77,7 +77,7 @@ def get_current_version(path, version_source_type):
     return process.stdout.strip().decode("utf8")
 
 
-def get_expected_semantic_version(version_source_type, breaking_change_indicated_by):
+def _get_expected_semantic_version(version_source_type, breaking_change_indicated_by):
     """Get the expected semantic version for the package as of the current HEAD git commit.
 
     :param str version_source_type: the type of file containing the current version number (must be one of "setup.py", "pyproject.toml", or "package.json")

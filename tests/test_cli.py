@@ -14,8 +14,11 @@ class TestCLI(unittest.TestCase):
         """Test that the correct message and error message are returned if the current version and the expected version
         are the same.
         """
-        with patch("check_semantic_version.check_semantic_version.get_expected_semantic_version", return_value="0.3.9"):
-            with patch("check_semantic_version.check_semantic_version.get_current_version", return_value="0.3.9"):
+        with patch(
+            "check_semantic_version.check_semantic_version._get_expected_semantic_version",
+            return_value="0.3.9",
+        ):
+            with patch("check_semantic_version.check_semantic_version._get_current_version", return_value="0.3.9"):
                 with patch("sys.stdout") as mock_stdout:
                     with self.assertRaises(SystemExit) as e:
                         cli.main(["setup.py"])
@@ -31,8 +34,11 @@ class TestCLI(unittest.TestCase):
         """Test that the correct message and error message are returned if the current version and the expected version
         are not the same.
         """
-        with patch("check_semantic_version.check_semantic_version.get_expected_semantic_version", return_value="0.5.3"):
-            with patch("check_semantic_version.check_semantic_version.get_current_version", return_value="0.3.9"):
+        with patch(
+            "check_semantic_version.check_semantic_version._get_expected_semantic_version",
+            return_value="0.5.3",
+        ):
+            with patch("check_semantic_version.check_semantic_version._get_current_version", return_value="0.3.9"):
                 with patch("sys.stdout") as mock_stdout:
                     with self.assertRaises(SystemExit) as e:
                         cli.main(["setup.py"])
@@ -51,8 +57,11 @@ class TestCLI(unittest.TestCase):
         """Test that the correct message and error message are returned if the current version and the expected version
         are not the same (reversed compared to the previous test).
         """
-        with patch("check_semantic_version.check_semantic_version.get_expected_semantic_version", return_value="0.3.9"):
-            with patch("check_semantic_version.check_semantic_version.get_current_version", return_value="0.5.3"):
+        with patch(
+            "check_semantic_version.check_semantic_version._get_expected_semantic_version",
+            return_value="0.3.9",
+        ):
+            with patch("check_semantic_version.check_semantic_version._get_current_version", return_value="0.5.3"):
                 with patch("sys.stdout") as mock_stdout:
                     with self.assertRaises(SystemExit) as e:
                         cli.main(["setup.py"])
