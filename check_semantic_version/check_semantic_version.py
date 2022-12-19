@@ -1,12 +1,19 @@
 import logging
 import os
 import subprocess
+import sys
 import tempfile
 
 from check_semantic_version.configuration import Configuration
 
 
 logger = logging.getLogger(__name__)
+
+logging.basicConfig(
+    stream=sys.stdout,
+    format="[%(asctime)s | %(levelname)s | %(name)s] %(message)s",
+    level=logging.INFO,
+)
 
 RED = "\033[0;31m"
 GREEN = "\033[0;32m"
