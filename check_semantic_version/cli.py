@@ -6,7 +6,7 @@ from check_semantic_version.check_semantic_version import (
     GREEN,
     NO_COLOUR,
     RED,
-    VERSION_PARAMETERS,
+    SUPPORTED_VERSION_SOURCE_FILES,
     get_current_version,
     get_expected_semantic_version,
 )
@@ -22,8 +22,8 @@ def main(argv=None):
 
     parser.add_argument(
         "path",
-        choices=list(VERSION_PARAMETERS.keys()),
-        help=f"The path to the version source file. It must be one of these types: {list(VERSION_PARAMETERS.keys())}",
+        choices=SUPPORTED_VERSION_SOURCE_FILES,
+        help=f"The path to the version source file. It must be one of these types: {SUPPORTED_VERSION_SOURCE_FILES}",
     )
 
     parser.add_argument(

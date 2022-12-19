@@ -1,4 +1,3 @@
-import copy
 import logging
 import os
 import subprocess
@@ -13,11 +12,7 @@ RED = "\033[0;31m"
 GREEN = "\033[0;32m"
 NO_COLOUR = "\033[0m"
 
-VERSION_PARAMETERS = {
-    "setup.py": [["python", "setup.py", "--version"], False],
-    "pyproject.toml": [["poetry", "version", "-s"], False],
-    "package.json": ["""cat {} | jq --raw-output '.["version"]'""", True],
-}
+SUPPORTED_VERSION_SOURCE_FILES = {"setup.py", "pyproject.toml", "package.json"}
 
 
 def get_current_version(path, version_source_type):
@@ -28,24 +23,25 @@ def get_current_version(path, version_source_type):
     :param str version_source_type: the type of file containing the current version number (must be one of "setup.py", "pyproject.toml", or "package.json")
     :return str: the version specified in the version source file
     """
-    try:
-        version_parameters = copy.deepcopy(VERSION_PARAMETERS[version_source_type])
-    except KeyError:
+    if version_source_type not in SUPPORTED_VERSION_SOURCE_FILES:
         raise ValueError(
-            f"Unsupported version source received: {version_source_type!r}; options are {list(VERSION_PARAMETERS.keys())!r}."
+            f"Unsupported version source received: {version_source_type!r}; options are "
+            f"{SUPPORTED_VERSION_SOURCE_FILES!r}."
         )
 
-    original_working_directory = os.getcwd()
-    os.chdir(os.path.dirname(os.path.abspath(path)))
+    absolute_path = os.path.abspath(path)
 
-    if version_source_type == "package.json":
-        version_parameters[0] = version_parameters[0].format(path)
+    if version_source_type == "setup.py":
+        command = ["python", absolute_path, "--version"]
+        shell = False
+    elif version_source_type == "pyproject.toml":
+        command = ["poetry", "version", "-s", f"--directory={os.path.dirname(absolute_path)}"]
+        shell = False
+    elif version_source_type == "package.json":
+        command = f"""cat {absolute_path} | jq --raw-output '.["version"]'"""
+        shell = True
 
-    process = subprocess.run(version_parameters[0], shell=version_parameters[1], capture_output=True)
-
-    if os.getcwd() != original_working_directory:
-        os.chdir(original_working_directory)
-
+    process = subprocess.run(command, shell=shell, capture_output=True)
     return process.stdout.strip().decode("utf8")
 
 
