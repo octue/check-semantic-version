@@ -62,6 +62,7 @@ class TestCheckSemanticVersion(unittest.TestCase):
         self.assertEqual(version, "0.6.3")
 
     def test_get_current_version_for_package_json(self):
+        """Test that the current version can be extracted from a top-level `package.json` file."""
         try:
             os.chdir(TEST_DATA_DIRECTORY)
             version = check_semantic_version.get_current_version("package.json", version_source_type="package.json")
