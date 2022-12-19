@@ -132,9 +132,11 @@ def _get_expected_semantic_version(version_source_type, breaking_change_indicate
             configuration.write(path=config_path)
         else:
             config_path = os.path.abspath("mkver.conf")
-
             logger.warning("`mkver.conf` file found at %r. Ignoring `breaking_change_indicated_by` input.", config_path)
 
-        process = subprocess.run(["git-mkver", "-c", config_path, "next"], capture_output=True)
+        try:
+            process = subprocess.run(["git-mkver", "-c", config_path, "next"], capture_output=True, check=True)
+        except subprocess.CalledProcessError as e:
+            raise CalledProcessError(returncode=e.returncode, cmd=e.cmd, output=e.output, stderr=e.stderr) from None
 
     return process.stdout.strip().decode("utf8")
