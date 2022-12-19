@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "check_semantic_version"}]
 
 [tool.poetry.scripts]
-check-semantic-version = "check_semantic_version.check_semantic_version:main"
+check-semantic-version = "check_semantic_version.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
