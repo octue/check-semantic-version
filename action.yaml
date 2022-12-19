@@ -14,7 +14,7 @@ inputs:
     default: 'major'
 runs:
    using: 'docker'
-   image: 'docker://octue/check-semantic-version:1.0.0.beta-7'
+   image: 'docker://octue/check-semantic-version:1.0.0.beta-8'
    args:
      - ${{ inputs.path }}
      - ${{ inputs.breaking_change_indicated_by }}

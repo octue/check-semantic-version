@@ -14,7 +14,6 @@ def main(argv=None):
 
     parser.add_argument(
         "path",
-        choices=SUPPORTED_VERSION_SOURCE_FILES,
         help=f"The path to the version source file. The file must be one of these types: {SUPPORTED_VERSION_SOURCE_FILES}",
     )
 
