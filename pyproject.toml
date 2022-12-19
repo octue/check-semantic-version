@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "check-semantic-version"
-version = "1.0.0.beta-4"
+version = "1.0.0.beta-5"
 description = "A GitHub action that checks the version of your package is the same as the expected semantic version calculated from the conventional commits on your current branch."
 authors = ["Marcus Lugg <marcus@octue.com>"]
 readme = "README.md"
 packages = [{include = "check_semantic_version"}]
 
 [tool.poetry.scripts]
-check-semantic-version = "check_semantic_version.check_semantic_version:main"
+check-semantic-version = "check_semantic_version.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
