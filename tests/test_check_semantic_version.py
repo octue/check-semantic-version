@@ -21,7 +21,7 @@ class MockCompletedProcess:
         self.stdout = stdout
 
 
-class TestCheckSemanticVersion(unittest.TestCase):
+class TestGetCurrentVersion(unittest.TestCase):
     def test_error_raised_if_unsupported_version_source_provided(self):
         """Ensure an error is raised if an unsupported version source is provided."""
         with self.assertRaises(ValueError):
@@ -54,6 +54,8 @@ class TestCheckSemanticVersion(unittest.TestCase):
         version = check_semantic_version.get_current_version(path, version_source_type="package.json")
         self.assertEqual(version, "1.5.3")
 
+
+class TestGetExpectedSemanticVersion(unittest.TestCase):
     def test_get_expected_semantic_version(self):
         """Test that the expected semantic version can be parsed from a successful `git-mkver` command."""
         with patch("subprocess.run", return_value=MockCompletedProcess(stdout=b"0.3.9")):

@@ -28,7 +28,6 @@ def main(argv=None):
     )
 
     args = parser.parse_args(argv)
-
     match = check_versions_match(args.path, args.breaking_change_indicated_by)
 
     if not match:
