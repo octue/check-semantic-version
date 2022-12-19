@@ -28,29 +28,16 @@ class TestCheckSemanticVersion(unittest.TestCase):
             check_semantic_version.get_current_version(path="blah", version_source_type="blah")
 
     def test_get_current_version_for_setup_py(self):
-        try:
-            os.chdir(TEST_DATA_DIRECTORY)
-            version = check_semantic_version.get_current_version("setup.py", version_source_type="setup.py")
-            self.assertEqual(version, "0.3.4")
-        finally:
-            os.chdir(TEST_DIRECTORY)
-
-    def test_get_current_version_with_custom_file_path_for_setup_py(self):
-        """Test that the current version can be extracted from a different file than the top-level setup.py file."""
-        version = check_semantic_version.get_current_version(
-            path=os.path.join(TEST_DATA_DIRECTORY, "setup.py"),
-            version_source_type="setup.py",
-        )
-
+        """Test that the current version can be extracted from a `setup.py` file."""
+        path = os.path.join(TEST_DATA_DIRECTORY, "setup.py")
+        version = check_semantic_version.get_current_version(path, version_source_type="setup.py")
         self.assertEqual(version, "0.3.4")
 
     def test_get_current_version_for_pyproject_toml(self):
-        try:
-            os.chdir(TEST_DATA_DIRECTORY)
-            version = check_semantic_version.get_current_version("pyproject.toml", version_source_type="pyproject.toml")
-            self.assertEqual(version, "0.6.3")
-        finally:
-            os.chdir(TEST_DIRECTORY)
+        """Test that the current version can be extracted from a `pyproject.toml` file."""
+        path = os.path.join(TEST_DATA_DIRECTORY, "pyproject.toml")
+        version = check_semantic_version.get_current_version(path, version_source_type="pyproject.toml")
+        self.assertEqual(version, "0.6.3")
 
     def test_get_current_version_with_custom_file_path_for_pyproject_toml(self):
         """Test that the current version can be extracted from a different file than the top-level file pyproject.toml."""
@@ -63,20 +50,8 @@ class TestCheckSemanticVersion(unittest.TestCase):
 
     def test_get_current_version_for_package_json(self):
         """Test that the current version can be extracted from a top-level `package.json` file."""
-        try:
-            os.chdir(TEST_DATA_DIRECTORY)
-            version = check_semantic_version.get_current_version("package.json", version_source_type="package.json")
-            self.assertEqual(version, "1.5.3")
-        finally:
-            os.chdir(TEST_DIRECTORY)
-
-    def test_get_current_version_with_custom_file_path_for_package_json(self):
-        """Test that the current version can be extracted from a different file than the top-level package.json file."""
-        version = check_semantic_version.get_current_version(
-            path=os.path.join(TEST_DATA_DIRECTORY, "package.json"),
-            version_source_type="package.json",
-        )
-
+        path = os.path.join(TEST_DATA_DIRECTORY, "package.json")
+        version = check_semantic_version.get_current_version(path, version_source_type="package.json")
         self.assertEqual(version, "1.5.3")
 
     def test_get_expected_semantic_version(self):
