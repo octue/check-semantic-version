@@ -6,7 +6,8 @@ RUN curl -L https://github.com/idc101/git-mkver/releases/download/v1.3.0/git-mkv
     | tar xvz \
     && mv git-mkver /usr/local/bin
 
-RUN pip3 install git+https://github.com/octue/check-semantic-version@1.0.1
+ARG VERSION
+RUN pip3 install git+https://github.com/octue/check-semantic-version@${VERSION}
 
 COPY check_semantic_version/entrypoint.sh /entrypoint.sh
 
