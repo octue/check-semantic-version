@@ -1,4 +1,4 @@
-FROM python:3.10.14-slim-bookworm
+FROM --platform=linux/amd64 python:3.10.14-slim-bookworm
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl git jq && rm -rf /var/lib/apt/lists/*
 
