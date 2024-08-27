@@ -131,6 +131,8 @@ def _get_expected_semantic_version(version_source_type, breaking_change_indicate
             configuration.generate()
             config_path = temporary_configuration.name
             configuration.write(path=config_path)
+            logger.info("`mkver.conf` file created at %r.", config_path)
+
         else:
             config_path = os.path.abspath("mkver.conf")
             logger.warning("`mkver.conf` file found at %r. Ignoring `breaking_change_indicated_by` input.", config_path)
