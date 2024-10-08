@@ -4,7 +4,6 @@ from unittest.mock import patch
 
 from check_semantic_version import cli
 
-
 TEST_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
 TEST_DATA_DIRECTORY = os.path.join(TEST_DIRECTORY, "test_package")
 
