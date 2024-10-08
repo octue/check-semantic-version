@@ -7,7 +7,6 @@ import tempfile
 
 from check_semantic_version.configuration import Configuration
 
-
 logger = logging.getLogger(__name__)
 
 logging.basicConfig(

@@ -2,7 +2,6 @@ import copy
 
 from pyhocon import ConfigFactory, HOCONConverter
 
-
 DEFAULTS = {
     "tag": False,
     "tagMessageFormat": "Release/{Tag}",
