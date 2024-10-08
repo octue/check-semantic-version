@@ -31,7 +31,6 @@ ignore = ["E501"]
 unfixable = ["F401"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["server", "bezier", "people", "revolve", "settings", "utils"]
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 force-sort-within-sections = true
 
