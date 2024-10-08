@@ -79,7 +79,6 @@ jobs:
         uses: docker/build-push-action@v3.1.1
         with:
           context: .
-          build-args: VERSION=${{ needs.tests.outputs.package_version }}
           platforms: linux/amd64
           push: true
           tags: octue/check-semantic-version:${{ needs.tests.outputs.package_version }},octue/check-semantic-version:latest
