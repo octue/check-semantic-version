@@ -109,7 +109,9 @@ def _get_current_version(path, version_source_type):
     except subprocess.CalledProcessError as e:
         raise CalledProcessError(returncode=e.returncode, cmd=e.cmd, output=e.output, stderr=e.stderr) from None
 
-    return process.stdout.strip().decode("utf8")
+    current_version = process.stdout.strip().decode("utf8")
+    logger.info("Current version: %s", current_version)
+    return current_version
 
 
 def _get_expected_semantic_version(version_source_type, breaking_change_indicated_by):
