@@ -24,7 +24,7 @@ steps:
     with:
       # Set fetch-depth to 0 to fetch all tags (necessary for `git-mkver` to determine the correct semantic version).
       fetch-depth: 0
-  - uses: octue/check-semantic-version@1.0.3
+  - uses: octue/check-semantic-version@1.0.4
     with:
       path: setup.py
       breaking_change_indicated_by: major
