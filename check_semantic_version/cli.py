@@ -1,4 +1,5 @@
 import argparse
+import importlib.metadata
 import sys
 
 from check_semantic_version.check_semantic_version import SUPPORTED_VERSION_SOURCE_FILES, check_versions_match
@@ -24,6 +25,14 @@ def main(argv=None):
         nargs="?",
         help='The number in the semantic version that a breaking change should increment (must be one of "major", '
         '"minor", or "patch"). This is ignored if a `mkver.conf` file is present in the repository root.',
+    )
+
+    parser.add_argument(
+        "--version",
+        "-v",
+        action="version",
+        version=importlib.metadata.version("check-semantic-version"),
+        help="Print the version of the check-semantic-version CLI.",
     )
 
     args = parser.parse_args(argv)

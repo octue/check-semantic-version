@@ -7,7 +7,6 @@ import tempfile
 
 from check_semantic_version.configuration import Configuration
 
-
 logger = logging.getLogger(__name__)
 
 logging.basicConfig(
@@ -109,7 +108,9 @@ def _get_current_version(path, version_source_type):
     except subprocess.CalledProcessError as e:
         raise CalledProcessError(returncode=e.returncode, cmd=e.cmd, output=e.output, stderr=e.stderr) from None
 
-    return process.stdout.strip().decode("utf8")
+    current_version = process.stdout.strip().decode("utf8")
+    logger.info("Current version: %s", current_version)
+    return current_version
 
 
 def _get_expected_semantic_version(version_source_type, breaking_change_indicated_by):
@@ -140,6 +141,6 @@ def _get_expected_semantic_version(version_source_type, breaking_change_indicate
         try:
             process = subprocess.run(["git-mkver", "-c", config_path, "next"], capture_output=True, check=True)
         except subprocess.CalledProcessError as e:
-            raise CalledProcessError(returncode=e.returncode, cmd=e.cmd, output=e.output, stderr=e.stderr) from None
+            raise CalledProcessError(returncode=e.returncode, cmd=e.cmd, output=e.output, stderr=e.stderr)
 
     return process.stdout.strip().decode("utf8")

@@ -31,7 +31,6 @@ jobs:
         uses: docker/build-push-action@v3.1.1
         with:
           context: .
-          build-args: VERSION=${{ github.event.inputs.ref }}
           platforms: linux/amd64
           push: true
           tags: octue/check-semantic-version:${{ github.event.inputs.tag }}
