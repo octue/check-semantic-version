@@ -1,7 +1,12 @@
 FROM octue/check-semantic-version:1.0.0.beta-9
 
+# Install poetry.
+ENV POETRY_HOME=/root/.poetry
+ENV PATH="$POETRY_HOME/bin:$PATH"
+RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=1.2.1 python3 - && poetry config virtualenvs.create false;
+
 COPY . .
-RUN pip install -e .
+RUN poetry install
 
 COPY check_semantic_version/entrypoint.sh /entrypoint.sh
 
