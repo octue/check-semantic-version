@@ -1,4 +1,10 @@
-FROM octue/check-semantic-version:1.0.0.beta-9
+FROM --platform=linux/amd64 python:3.10.14-slim-bookworm
+
+RUN apt-get update && apt-get install -y --no-install-recommends curl git jq && rm -rf /var/lib/apt/lists/*
+
+RUN curl -L https://github.com/idc101/git-mkver/releases/download/v1.3.0/git-mkver-linux-x86_64-1.3.0.tar.gz \
+    | tar xvz \
+    && mv git-mkver /usr/local/bin
 
 # Install poetry.
 ENV POETRY_HOME=/root/.poetry
