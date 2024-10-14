@@ -1,4 +1,4 @@
-FROM python:3.10.7-slim
+FROM octue/check-semantic-version:1.0.0.beta-9
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl git jq && rm -rf /var/lib/apt/lists/*
 
