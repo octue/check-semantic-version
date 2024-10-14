@@ -11,12 +11,28 @@ check-semantic-version = "check_semantic_version.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-poetry = "^1.2.1"
-pyhocon = "^0.3.61"
+poetry = "^1.8.0"
+pyhocon = "^0.3.59"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^2.20.0"
+pre-commit = "^3.8.0"
 coverage = "^6.5.0"
+ruff = "^0.6"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+# Enable pycodestyle (`E`) and Pyflakes (`F`) codes.
+select = ["E", "F"]
+# Ignore E501 line-too-long - see https://docs.astral.sh/ruff/faq/#is-the-ruff-linter-compatible-with-black for why
+ignore = ["E501"]
+# Disable fix for unused imports (`F401`) which annoyingly removes your work-in-progress on save
+unfixable = ["F401"]
+
+[tool.ruff.lint.isort]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+force-sort-within-sections = true
 
 [build-system]
 requires = ["poetry-core"]
