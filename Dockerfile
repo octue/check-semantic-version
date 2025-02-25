@@ -11,8 +11,4 @@ RUN curl -sSL https://install.python-poetry.org | python3 - && poetry config vir
 COPY . .
 RUN poetry install
 
-COPY check_semantic_version/entrypoint.sh /entrypoint.sh
-
-RUN chmod +x entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["check-semantic-version"]
