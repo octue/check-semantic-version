@@ -11,7 +11,7 @@ check-semantic-version = "check_semantic_version.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-poetry = "^1.8.0"
+poetry = "^2"
 pyhocon = "^0.3.59"
 
 [tool.poetry.group.dev.dependencies]
