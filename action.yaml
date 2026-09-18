@@ -6,7 +6,7 @@ branding:
   color: green
 inputs:
   path:
-    description: 'The path of the file containing the current version number (must be one of "setup.py", "pyproject.toml", or "package.json").'
+    description: 'The path of the file containing the current version number (must be one of "setup.py", "pyproject.toml", "package.json", or "Cargo.toml").'
     required: true
   breaking_change_indicated_by:
     description: 'The number in the semantic version that a breaking change should increment (must be one of "major", "minor", or "patch"). This is ignored if a `mkver.conf` file is present in the repository root.'
@@ -14,7 +14,7 @@ inputs:
     default: 'major'
 runs:
    using: 'docker'
-   image: 'docker://octue/check-semantic-version:1.0.6'
+   image: 'docker://octue/check-semantic-version:1.1.0'
    args:
      - ${{ inputs.path }}
      - ${{ inputs.breaking_change_indicated_by }}

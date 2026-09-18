@@ -43,6 +43,16 @@ PATCHES = {
             }
         ],
     },
+    "Cargo.toml": {
+        "name": "Cargo.toml",
+        "filePatterns": ["Cargo.toml"],
+        "replacements": [
+            {
+                "find": 'version = "{VersionRegex}"',
+                "replace": 'version = "{Version}"',
+            }
+        ],
+    },
 }
 
 COMMIT_MESSAGE_ACTIONS_TEMPLATE = [
@@ -70,7 +80,7 @@ BREAKING_CHANGE_COMMIT_ACTION_MAPPING = {
 class Configuration:
     """A representation of a `mkver.conf` (`git-mkver` configuration) file.
 
-    :param str version_source_type: the type of file containing the current version number (must be one of "setup.py", "pyproject.toml", or "package.json")
+    :param str version_source_type: the type of file containing the current version number (must be one of "setup.py", "pyproject.toml", "package.json", or "Cargo.toml")
     :param str breaking_change_indicated_by: the number in the semantic version that a breaking change should increment (must be one of "major", "minor", or "patch")
     :param str tag_prefix: the prefix to be used before version numbers (e.g. "v")
     :return None:
