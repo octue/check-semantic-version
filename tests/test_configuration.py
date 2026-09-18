@@ -69,6 +69,28 @@ class TestConfiguration(TestCase):
             ],
         )
 
+    def test_generate_with_cargo_toml_version_source(self):
+        """Test generating a configuration for a `Cargo.toml` version source works."""
+        configuration = Configuration(version_source_type="Cargo.toml")
+        configuration.generate()
+
+        self.assertEqual(configuration._configuration["defaults"]["patches"], ["Cargo.toml"])
+        self.assertEqual(
+            configuration._configuration["patches"],
+            [
+                {
+                    "name": "Cargo.toml",
+                    "filePatterns": ["Cargo.toml"],
+                    "replacements": [
+                        {
+                            "find": 'version = "{VersionRegex}"',
+                            "replace": 'version = "{Version}"',
+                        }
+                    ],
+                },
+            ],
+        )
+
     def test_generate_with_breaking_change_indicated_by_major(self):
         """Test generating a configuration that indicates breaking changes by a major version change works."""
         configuration = Configuration(version_source_type="pyproject.toml", breaking_change_indicated_by="major")

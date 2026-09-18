@@ -1,0 +1,6 @@
+[package]
+name = "blah-de-blah"
+edition = "2021"
+
+[dependencies]
+serde = "1.0.219"
