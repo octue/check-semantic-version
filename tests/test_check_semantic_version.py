@@ -53,6 +53,55 @@ class TestGetCurrentVersion(unittest.TestCase):
         version = check_semantic_version._get_current_version(path, version_source_type="package.json")
         self.assertEqual(version, "1.5.3")
 
+    def test_get_current_version_for_cargo_toml(self):
+        """Test that the current version can be extracted from the `Cargo.toml` file of a plain Rust package, where the
+        version is declared literally in the `[package]` section.
+        """
+        path = os.path.join(TEST_DIRECTORY, "test_cargo_package", "Cargo.toml")
+        version = check_semantic_version._get_current_version(path, version_source_type="Cargo.toml")
+        self.assertEqual(version, "0.9.1")
+
+    def test_get_current_version_for_cargo_toml_of_workspace(self):
+        """Test that the current version can be extracted from the `Cargo.toml` file of a Cargo workspace, which has no
+        `[package]` section at all and declares the version its members inherit in `[workspace.package]`.
+        """
+        path = os.path.join(TEST_DIRECTORY, "test_cargo_workspace", "Cargo.toml")
+        version = check_semantic_version._get_current_version(path, version_source_type="Cargo.toml")
+        self.assertEqual(version, "2.4.0")
+
+    def test_get_current_version_for_cargo_toml_of_single_crate_workspace(self):
+        """Test that the version inherited by the package is used when a `Cargo.toml` file is both a package manifest
+        and a workspace manifest. The `[package]` section inherits its version rather than stating one, so the
+        workspace's version is the package's version.
+        """
+        path = os.path.join(TEST_DIRECTORY, "test_cargo_single_crate_workspace", "Cargo.toml")
+        version = check_semantic_version._get_current_version(path, version_source_type="Cargo.toml")
+        self.assertEqual(version, "3.1.2")
+
+    def test_error_raised_if_cargo_toml_contains_no_version(self):
+        """Test that a helpful error is raised if a `Cargo.toml` file declares no version in either its `[package]` or
+        its `[workspace.package]` section. Without this, a missing version would silently be reported as a version
+        mismatch instead of as a misconfiguration.
+        """
+        path = os.path.join(TEST_DIRECTORY, "test_cargo_versionless_package", "Cargo.toml")
+
+        with self.assertRaises(ValueError) as error:
+            check_semantic_version._get_current_version(path, version_source_type="Cargo.toml")
+
+        self.assertIn("[workspace.package]", error.exception.args[0])
+
+    def test_error_raised_if_cargo_toml_only_inherits_its_version(self):
+        """Test that an error is raised if a `Cargo.toml` file inherits its version from a workspace it is not itself
+        the root of. The version cannot be resolved from such a file, so the checker must say so rather than compare
+        against nothing.
+        """
+        path = os.path.join(TEST_DIRECTORY, "test_cargo_workspace_member", "Cargo.toml")
+
+        with self.assertRaises(ValueError) as error:
+            check_semantic_version._get_current_version(path, version_source_type="Cargo.toml")
+
+        self.assertIn("workspace root", error.exception.args[0])
+
 
 class TestGetExpectedSemanticVersion(unittest.TestCase):
     def test_get_expected_semantic_version(self):

@@ -1,0 +1,11 @@
+[package]
+name = "blah-de-blah"
+version.workspace = true
+edition.workspace = true
+
+[workspace]
+members = ["crates/*"]
+
+[workspace.package]
+version = "3.1.2"
+edition = "2024"

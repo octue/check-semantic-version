@@ -5,6 +5,8 @@ import subprocess
 import sys
 import tempfile
 
+import tomlkit
+
 from check_semantic_version.configuration import Configuration
 
 logger = logging.getLogger(__name__)
@@ -19,7 +21,7 @@ RED = "\033[0;31m"
 GREEN = "\033[0;32m"
 NO_COLOUR = "\033[0m"
 
-SUPPORTED_VERSION_SOURCE_FILES = {"setup.py", "pyproject.toml", "package.json"}
+SUPPORTED_VERSION_SOURCE_FILES = {"setup.py", "pyproject.toml", "package.json", "Cargo.toml"}
 
 
 class CalledProcessError(subprocess.CalledProcessError):
@@ -46,7 +48,7 @@ class CalledProcessError(subprocess.CalledProcessError):
 def check_versions_match(path, breaking_change_indicated_by="major"):
     """Check that the current version in the version source file at the given path matches the expected semantic version.
 
-    :param str path: the path to the version source file (it must be of type "setup.py", "pyproject.toml", or "package.json")
+    :param str path: the path to the version source file (it must be of type "setup.py", "pyproject.toml", "package.json", or "Cargo.toml")
     :param str breaking_change_indicated_by: the number in the semantic version that a breaking change should increment (must be one of "major", "minor", or "patch")
     :return bool: whether the versions match
     """
@@ -80,8 +82,8 @@ def _get_current_version(path, version_source_type):
     """Get the current version of the package via the given version source. The relevant file containing the version
     information is assumed to be in the current working directory unless `version_source_file` is given.
 
-    :param str path: the path to the version source file (it must be of type "setup.py", "pyproject.toml", or "package.json")
-    :param str version_source_type: the type of file containing the current version number (must be one of "setup.py", "pyproject.toml", or "package.json")
+    :param str path: the path to the version source file (it must be of type "setup.py", "pyproject.toml", "package.json", or "Cargo.toml")
+    :param str version_source_type: the type of file containing the current version number (must be one of "setup.py", "pyproject.toml", "package.json", or "Cargo.toml")
     :return str: the version specified in the version source file
     """
     if version_source_type not in SUPPORTED_VERSION_SOURCE_FILES:
@@ -92,6 +94,11 @@ def _get_current_version(path, version_source_type):
 
     absolute_path = os.path.abspath(path)
     logger.info("Getting current version from %r.", absolute_path)
+
+    if version_source_type == "Cargo.toml":
+        current_version = _get_current_version_from_cargo_manifest(absolute_path)
+        logger.info("Current version: %s", current_version)
+        return current_version
 
     if version_source_type == "setup.py":
         command = ["python", absolute_path, "--version"]
@@ -113,10 +120,45 @@ def _get_current_version(path, version_source_type):
     return current_version
 
 
+def _get_current_version_from_cargo_manifest(path):
+    """Get the current version of a Rust package or Cargo workspace from its `Cargo.toml` file.
+
+    The version is taken from the `version` field of the `[package]` section if that section states one literally. If it
+    doesn't, the version is taken from the `version` field of the `[workspace.package]` section, which is where a Cargo
+    workspace declares the single version that its member crates inherit.
+
+    :param str path: the absolute path to the `Cargo.toml` file
+    :raise ValueError: if the file declares no version that can be resolved from the file alone
+    :return str: the version declared in the file
+    """
+    with open(path, encoding="utf8") as f:
+        manifest = tomlkit.parse(f.read())
+
+    package_section = manifest.get("package") or {}
+    workspace_package_section = (manifest.get("workspace") or {}).get("package") or {}
+
+    for version in (package_section.get("version"), workspace_package_section.get("version")):
+        # An inherited version (`version = { workspace = true }`) is a table rather than a string, so it is skipped in
+        # favour of the workspace's own version.
+        if isinstance(version, str):
+            return str(version)
+
+    if package_section.get("version") is not None:
+        raise ValueError(
+            f"The Cargo manifest at {path!r} inherits its version from a workspace it isn't the root of, so the "
+            f"version can't be read from it. Point the checker at the workspace root's `Cargo.toml` file instead."
+        )
+
+    raise ValueError(
+        f"No version found in the Cargo manifest at {path!r}. The version must be given as the `version` field of its "
+        f"`[package]` section or, for a workspace, of its `[workspace.package]` section."
+    )
+
+
 def _get_expected_semantic_version(version_source_type, breaking_change_indicated_by):
     """Get the expected semantic version for the package as of the current HEAD git commit.
 
-    :param str version_source_type: the type of file containing the current version number (must be one of "setup.py", "pyproject.toml", or "package.json")
+    :param str version_source_type: the type of file containing the current version number (must be one of "setup.py", "pyproject.toml", "package.json", or "Cargo.toml")
     :param str breaking_change_indicated_by: the number in the semantic version that a breaking change should increment (must be one of "major", "minor", or "patch")
     :return str:
     """

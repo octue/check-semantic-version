@@ -13,6 +13,7 @@ It supports the following version source files:
 - `setup.py`
 - `pyproject.toml`
 - `package.json`
+- `Cargo.toml`
 
 ## Usage
 
@@ -24,7 +25,7 @@ steps:
     with:
       # Set fetch-depth to 0 to fetch all tags (necessary for `git-mkver` to determine the correct semantic version).
       fetch-depth: 0
-  - uses: octue/check-semantic-version@1.0.6
+  - uses: octue/check-semantic-version@1.1.0
     with:
       path: setup.py
       breaking_change_indicated_by: major
@@ -49,9 +50,39 @@ A version source file is one of the following, which must contain the package ve
 - `setup.py`
 - `pyproject.toml`
 - `package.json`
+- `Cargo.toml`
 
 If the version source file is not in the root directory, an optional argument can be passed to the checker to tell it to
 look at a file of the version source file type at a different location.
+
+#### Rust packages and Cargo workspaces
+
+For a `Cargo.toml` file, the version is read from the `version` field of the `[package]` section:
+
+```toml
+[package]
+name = "my-package"
+version = "0.7.3"
+```
+
+A Cargo workspace declares one version in its `[workspace.package]` section, which its member crates inherit. The
+checker reads that version when the `[package]` section is absent or inherits its version, so point it at the
+workspace's root `Cargo.toml`:
+
+```toml
+[workspace]
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.7.3"
+```
+
+The checker compares that single version against the expected semantic version. It does not check the versions that the
+workspace's `[workspace.dependencies]` section pins for its own member crates — keeping those in step with the workspace
+version remains the maintainer's job.
+
+Pointing the checker at the `Cargo.toml` of a member crate that inherits its version fails with an error, because the
+version cannot be resolved from that file alone.
 
 ### `mkver.conf` files
 
